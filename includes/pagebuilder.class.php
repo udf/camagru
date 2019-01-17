@@ -9,7 +9,7 @@ $DATABASE = new DB();
 // Deconstruction outputs the footer
 class Pagebuilder
 {
-    function __construct($title, $navbar=True) {
+    function __construct($title) {
 ?>
     <!DOCTYPE html>
     <html>
@@ -20,9 +20,6 @@ class Pagebuilder
         <script src="js/main.js"></script>
     </head>
     <body>
-<?php
-    if ($navbar):
-?>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">Camagru</a>
         <ul class="navbar-nav mr-auto">
@@ -51,7 +48,6 @@ class Pagebuilder
             <?php endif; ?>
         </ul>
     </nav>
-<?php endif; ?>
     <div id="server_messages"></div>
 <?php
     }

@@ -30,16 +30,17 @@ if ($validator->verify()) {
     die_with_alert('success', 'Registration successful!', 'Please check your email to verify your account', 200);
 }
 
-$_PAGE_BUILDER = new Pagebuilder('Register', false);
+$_PAGE_BUILDER = new Pagebuilder('Register');
 ?>
 
 <main role="main" class="container">
 <form class="form-center">
-    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+    <h1 class="mt-5 font-weight-normal">Register</h1>
     <input class="form-control" type="text" name="username" placeholder="Username" required autofocus>
     <input class="form-control" type="email" name="email" placeholder="Email" required>
     <input class="form-control" type="password" name="password" placeholder="Password" minlength="6" required>
     <input class="form-control" type="password" name="password_verify" placeholder="Confirm Password" minlength="6" required>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
+    <a class="btn btn-lg btn-secondary btn-block" style="color: white;" href="login.php">Already have an account?</a>
 </form>
 </main>

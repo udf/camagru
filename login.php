@@ -39,12 +39,12 @@ if ($validator->verify()) {
     die_with_alert('success', 'Login successful!', 'You will be redirected to the home page', 200);
 }
 
-$_PAGE_BUILDER = new Pagebuilder('Login', false);
+$_PAGE_BUILDER = new Pagebuilder('Login');
 ?>
 
 <main role="main" class="container">
 <form class="form-center" redirect="index.php">
-    <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+    <h1 class="mt-5 font-weight-normal">Sign in</h1>
     <input class="form-control" type="text" name="username" placeholder="Email or Username" required="" autofocus="">
     <input class="form-control" type="password" name="password" placeholder="Password" minlength="6" required="">
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
