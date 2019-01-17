@@ -5,10 +5,11 @@ if (array_key_exists('email', $_GET) === false)
     die('No.');
 
 try {
-    $verify_id = $DATABASE->get_verify_id($_GET['email']);
+    $user = $DATABASE->get_user($_GET['email']);
 } catch (RuntimeException $e) {
     die($e->getMessage());
 }
+$verify_id = $user['verify_id'];
 if ($verify_id !== NULL) {
     mail(
         $validator->data['email'],

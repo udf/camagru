@@ -22,14 +22,20 @@ $validator = new PostValidator(
 
 if ($validator->verify()) {
     try {
-        $username = $DATABASE->get_user(
-            $validator->data['username'],
-            $validator->data['password']
-        );
+        $user_data = $DATABASE->get_user($validator->data['username']);
+        if (password_verify($validator->data['password'], $user_data['pw_hash']) == false)
+            throw new RuntimeException('Incorrect password!');
+        if ($user_data['verify_id'] !== NULL)
+            throw new RuntimeException(
+                "Your email \"" . htmlspecialchars($user_data['email']) . "\" is not verified! "
+                . "<a href=reverify.php?email=" . urlencode($user_data['email'])
+                . ">Click here to resend your verification email.</a>"
+            );
     } catch (RuntimeException $e) {
         die_with_alert('danger', 'Error', $e->getMessage());
     }
-    $_SESSION['username'] = $username;
+    foreach ($user_data as $key => $value)
+        $_SESSION[$key] = $value;
     die_with_alert('success', 'Login successful!', 'You will be redirected to the home page', 200);
 }
 

@@ -58,10 +58,10 @@ class DB {
         return $verify_id;
     }
 
-    function get_user($username_or_email, $password) {
+    function get_user($username_or_email) {
         $sql = $this->conn->prepare('
             SELECT
-                `username`, `email`, `pw_hash`, `verify_id`
+                *
             FROM `users` WHERE
                 (email = ? OR username = ?);
         ');
@@ -73,32 +73,7 @@ class DB {
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result === false)
             throw new RuntimeException('A user with those details was not found!');
-        if (password_verify($password, $result['pw_hash']) == false)
-            throw new RuntimeException('Incorrect password!');
-        if ($result['verify_id'] !== NULL)
-            throw new RuntimeException(
-                "Your email \"" . htmlspecialchars($result['email']) . "\" is not verified! "
-                . "<a href=reverify.php?email=" . urlencode($result['email']) . ">Click here to resend your verification email.</a>"
-            );
-        return $result['username'];
-    }
-
-    function get_verify_id($email) {
-        $sql = $this->conn->prepare('
-            SELECT
-                `verify_id`
-            FROM `users` WHERE
-                email = ?;
-        ');
-        try {
-            $sql->execute([$email]);
-        } catch (PDOException $e) {
-            throw new RuntimeException('Sorry, an unexpected error occured.');
-        }
-        $result = $sql->fetch(PDO::FETCH_ASSOC);
-        if ($result === false)
-            throw new RuntimeException('There is no account associated with the provided email address');
-        return $result['verify_id'];
+        return $result;
     }
 
     function verify_user($verify_id) {
