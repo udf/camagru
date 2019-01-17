@@ -20,7 +20,7 @@ class Pagebuilder
         <script src="js/main.js"></script>
     </head>
     <body>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Camagru</a>
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
