@@ -6,7 +6,7 @@ function form_submit(event) {
     let req = new XMLHttpRequest();
     let output = document.getElementById('server_messages');
 
-    req.open('POST', '', true);
+    req.open('POST', form.getAttribute('action') || '', true);
     req.onload = function(event) {
         output.innerHTML = req.response;
         let redir_location = form.getAttribute('redirect');
@@ -17,12 +17,10 @@ function form_submit(event) {
     req.send(data);
 }
 
-// Attach an event listener to the first form on the page
 function form_init() {
-    let form = document.forms[0];
-    if (form === undefined)
-        return;
-    form.addEventListener('submit', form_submit, false);
+    for (let form of document.forms) {
+        form.addEventListener('submit', form_submit, false);
+    }
 }
 
 function init() {
