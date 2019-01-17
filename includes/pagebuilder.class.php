@@ -26,8 +26,8 @@ class Pagebuilder
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">Camagru</a>
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home</a>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php">Gallery</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
