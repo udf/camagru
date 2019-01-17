@@ -6,9 +6,8 @@ class PostValidator
     public $err_msgs;
     public $data;
 
-    function __construct($filter_def, $err_msgs) {
+    function __construct($filter_def) {
         $this->filter_def = $filter_def;
-        $this->err_msgs = $err_msgs;
     }
 
     function verify() {
@@ -17,7 +16,7 @@ class PostValidator
             return False;
         foreach ($post_data as $key => $value) {
             if ($value === false)
-                die_with_alert('danger', 'Error', $this->err_msgs[$key]);
+                die_with_alert('danger', 'Error', $this->filter_def[$key]['error']);
         }
         $this->data = $post_data;
         return True;

@@ -9,16 +9,14 @@ $validator = new PostValidator(
     [
         'username' => [
             'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => ['regexp' => '/^.+$/']
+            'options' => ['regexp' => '/^.+$/'],
+            'error' => 'No username/email provided'
         ],
         'password' => [
             'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => ['regexp' => '/^.+$/']
+            'options' => ['regexp' => '/^.+$/'],
+            'error' => 'No password provided'
         ]
-    ],
-    [
-        'username' => 'No username/email provided',
-        'password' => 'No password provided'
     ]
 );
 
