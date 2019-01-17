@@ -1,5 +1,8 @@
 <?php
 require_once('includes/pagebuilder.class.php');
+
+require_auth();
+
 $_PAGE_BUILDER = new Pagebuilder('Settings');
 ?>
 <main role="main" class="container">
