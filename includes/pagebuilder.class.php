@@ -48,12 +48,14 @@ class Pagebuilder
             <?php endif; ?>
         </ul>
     </nav>
-    <div id="server_messages"></div>
+    <main role="main" class="container">
+        <div id="server_messages"></div>
 <?php
     }
 
     function __destruct() {
 ?>
+    </main>
     <footer class="footer">
         <div class="container">
             <span>© Sam 2018</span>

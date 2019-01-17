@@ -42,7 +42,6 @@ if ($validator->verify()) {
 $_PAGE_BUILDER = new Pagebuilder('Login');
 ?>
 
-<main role="main" class="container">
 <form class="form-center" redirect="index.php">
     <h1 class="mt-5 font-weight-normal">Sign in</h1>
     <input class="form-control" type="text" name="username" placeholder="Email or Username" required="" autofocus="">
@@ -50,4 +49,3 @@ $_PAGE_BUILDER = new Pagebuilder('Login');
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <a class="btn btn-lg btn-secondary btn-block" style="color: white;" href="register.php">Create account</a>
 </form>
-</main>
