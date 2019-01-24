@@ -143,5 +143,43 @@ class DB {
         }
         return $pw_hash;
     }
+
+    function init_pw_reset($id) {
+        $sql = $this->conn->prepare('
+            UPDATE users SET
+                pw_change_id = ?
+            WHERE
+                id = ?;
+        ');
+        $pw_change_id = bin2hex(random_bytes(32));
+
+        try {
+            $sql->execute([$pw_change_id, $id]);
+        } catch (PDOException $e) {
+            var_dump($e);
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        return $pw_change_id;
+    }
+
+    function get_user_by_pw_change_id($pw_change_id) {
+        $sql = $this->conn->prepare('
+            SELECT
+                *
+            FROM `users` WHERE
+                pw_change_id = ?;
+        ');
+
+        try {
+            $sql->execute([$pw_change_id]);
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($result === false)
+            throw new RuntimeException('Invalid token');
+        return $result;
+    }
+
 }
 ?>

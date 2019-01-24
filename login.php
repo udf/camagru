@@ -46,6 +46,7 @@ $_PAGE_BUILDER = new Pagebuilder('Login');
     <h1 class="mt-5 font-weight-normal">Sign in</h1>
     <input class="form-control" type="text" name="username" placeholder="Email or Username" required="" autofocus="">
     <input class="form-control" type="password" name="password" placeholder="Password" minlength="6" required="">
+    <a href="forgot_password.php">Forgot Your Password?</a>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <a class="btn btn-lg btn-secondary btn-block" style="color: white;" href="register.php">Create account</a>
 </form>
