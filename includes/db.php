@@ -104,7 +104,6 @@ class DB {
         try {
             $sql->execute([$username, $email_notifications, $id]);
         } catch (PDOException $e) {
-            var_dump($e);
             throw new RuntimeException('The username that you entered is already in use!');
         }
     }
