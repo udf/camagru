@@ -18,4 +18,4 @@ if ($verify_id !== NULL) {
         'From: webmaster@camagru.com'
     );
 }
-header('Location: index.php');
+echo "Please check your email";

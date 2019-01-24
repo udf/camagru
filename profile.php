@@ -11,6 +11,7 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 
 <form class="form-center" action="change_username.php">
     <h1 class="h3 mb-3 font-weight-normal">Change Username</h1>
+    <input class="form-control" type="password" name="current_password" placeholder="Current Password" required="">
     <input class="form-control" type="text" name="username" placeholder="New Username" required="">
     <button class="btn btn-lg btn-secondary btn-block" type="submit">Change Username</button>
 </form>
@@ -18,14 +19,14 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 
 <form class="form-center" action="change_password.php">
     <h1 class="h3 mb-3 font-weight-normal">Change Password</h1>
-    <input class="form-control" type="text" name="password" placeholder="Current Password" required="">
-    <input class="form-control" type="text" name="new_password" placeholder="New Password" required="">
-    <input class="form-control" type="text" name="new_password_verify" placeholder="New Password" required="">
+    <input class="form-control" type="password" name="current_password" placeholder="Current Password" required="">
+    <input class="form-control" type="password" name="password" placeholder="New Password" required="">
+    <input class="form-control" type="password" name="password_verify" placeholder="Confirm Password" required="">
     <button class="btn btn-lg btn-secondary btn-block" type="submit">Change Password</button>
 </form>
 <hr />
 
-<form class="form-center" action="change_email.php">
+<form class="form-center" action="change_email.php" redirect="login.php">
     <h1 class="h3 mb-3 font-weight-normal">Change Email</h1>
     <input class="form-control" type="text" name="email" placeholder="Current Email Address" required="">
     <input class="form-control" type="text" name="new_email" placeholder="New Email Address" required="">
@@ -36,7 +37,8 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 <form class="form-center" action="change_notify.php">
     <h1 class="h3 mb-3 font-weight-normal">Email Nofications</h1>
     <label>Notifications Enabled:
-        <input class="checkbox pull-right" type="checkbox" name="notify_on" checked>
+        <input class="checkbox pull-right" type="checkbox" name="notify_on"
+        <?php echo $_SESSION['email_notifications'] ? 'checked' : '' ?>>
     </label>
     <button class="btn btn-lg btn-secondary btn-block" type="submit">Save</button>
 </form>

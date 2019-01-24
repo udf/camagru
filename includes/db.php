@@ -65,6 +65,7 @@ class DB {
             FROM `users` WHERE
                 (email = ? OR username = ?);
         ');
+
         try {
             $sql->execute([$username_or_email, $username_or_email]);
         } catch (PDOException $e) {
@@ -83,11 +84,64 @@ class DB {
             WHERE
                 verify_id = ?;
         ');
+
         try {
             $sql->execute([$verify_id]);
         } catch (PDOException $e) {
             throw new RuntimeException('Sorry, an unexpected error occured.');
         }
+    }
+
+    function update_user($id, $username, $email_notifications) {
+        $sql = $this->conn->prepare('
+            UPDATE users SET
+                username = ?,
+                email_notifications = ?
+            WHERE
+                id = ?;
+        ');
+
+        try {
+            $sql->execute([$username, $email_notifications, $id]);
+        } catch (PDOException $e) {
+            var_dump($e);
+            throw new RuntimeException('The username that you entered is already in use!');
+        }
+    }
+
+    function update_email($id, $email) {
+        $sql = $this->conn->prepare('
+            UPDATE users SET
+                email = ?,
+                verify_id = ?
+            WHERE
+                id = ?;
+        ');
+        $verify_id = bin2hex(random_bytes(32));
+
+        try {
+            $sql->execute([$email, $verify_id, $id]);
+        } catch (PDOException $e) {
+            throw new RuntimeException('The email that you entered is already in use!');
+        }
+    }
+
+    function update_password($id, $password) {
+        $sql = $this->conn->prepare('
+            UPDATE users SET
+                pw_hash = ?,
+                pw_change_id = NULL
+            WHERE
+                id = ?;
+        ');
+        $pw_hash = password_hash($password, PASSWORD_BCRYPT);
+
+        try {
+            $sql->execute([$pw_hash, $id]);
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        return $pw_hash;
     }
 }
 ?>
