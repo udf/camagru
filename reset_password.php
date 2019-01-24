@@ -32,7 +32,7 @@ if ($validator->verify()) {
         'You may now <a href="login.php">log in</a> with your new password.', 200);
 }
 
-$_PAGE_BUILDER = new Pagebuilder('Forgot Password');
+$_PAGE_BUILDER = new Pagebuilder('Reset Password');
 ?>
 
 <form class="form-center">
