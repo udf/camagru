@@ -169,7 +169,7 @@ window.onload = async () => {
             sel_i = layers.length;
         selected_layer = layers[sel_i - 1] || null;
     });
-    layer_swap_sel = (sel_i, offset) => {
+    let layer_swap_sel = (sel_i, offset) => {
         if (layers[sel_i] == null || layers[sel_i + offset] == null)
             return;
         [layers[sel_i], layers[sel_i + offset]] = [layers[sel_i + offset], layers[sel_i]];
