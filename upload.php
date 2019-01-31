@@ -149,21 +149,22 @@ window.onload = async () => {
             out = `${layers.length} layer(s); Nothing selected, use the blue arrows to select a layer!`;
         } else {
             let sel_i = layers.findIndex(e => e == selected_layer);
-            out = `${sel_i + 1}/${layers.length}: ${escape_html(selected_layer.name)}`;
+            out = `${sel_i + 1}/${layers.length}: ${escape_html(selected_layer.name)}
+                <br>Click and drag to transform the selected layer.`;
         }
         layer_info.innerHTML = out;
     }
-    let layer_btn_click_handler = (e, f) => {
+    let make_layer_btn_click_handler = (e, f) => {
         document.getElementById(e).addEventListener('click', () => {
             let sel_i = layers.findIndex(item => item == selected_layer);
             f(sel_i);
             update_layer_info();
         })
     };
-    layer_btn_click_handler('layer_sel_up', (sel_i) => {
+    make_layer_btn_click_handler('layer_sel_up', (sel_i) => {
         selected_layer = layers[sel_i + 1] || null;
     });
-    layer_btn_click_handler('layer_sel_down', (sel_i) => {
+    make_layer_btn_click_handler('layer_sel_down', (sel_i) => {
         if (sel_i < 0)
             sel_i = layers.length;
         selected_layer = layers[sel_i - 1] || null;
@@ -173,9 +174,9 @@ window.onload = async () => {
             return;
         [layers[sel_i], layers[sel_i + offset]] = [layers[sel_i + offset], layers[sel_i]];
     };
-    layer_btn_click_handler('layer_move_up', (sel_i) => layer_swap_sel(sel_i, 1));
-    layer_btn_click_handler('layer_move_down', (sel_i) => layer_swap_sel(sel_i, -1));
-    layer_btn_click_handler('layer_delete', (sel_i) => {
+    make_layer_btn_click_handler('layer_move_up', (sel_i) => layer_swap_sel(sel_i, 1));
+    make_layer_btn_click_handler('layer_move_down', (sel_i) => layer_swap_sel(sel_i, -1));
+    make_layer_btn_click_handler('layer_delete', (sel_i) => {
         layers = layers.filter(item => item !== selected_layer);
         selected_layer = null;
     });
