@@ -27,9 +27,11 @@ class Pagebuilder
             <li class="nav-item">
                 <a class="nav-link" href="index.php">Gallery</a>
             </li>
+            <?php if (isset($_SESSION['username'])): ?>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="upload.php">Upload</a>
             </li>
+            <?php endif; ?>
         </ul>
         <ul class="navbar-nav">
             <?php if (isset($_SESSION['username'])): ?>
