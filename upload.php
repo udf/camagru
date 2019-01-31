@@ -150,7 +150,8 @@ window.onload = async () => {
         } else {
             let sel_i = layers.findIndex(e => e == selected_layer);
             out = `${sel_i + 1}/${layers.length}: ${escape_html(selected_layer.name)}
-                <br>Click and drag to transform the selected layer.`;
+                <br>Click and drag to transform the selected layer.
+                <br>Use the grey arrows to change the order of the layers.`;
         }
         layer_info.innerHTML = out;
     }
