@@ -12,7 +12,7 @@ try {
 $verify_id = $user['verify_id'];
 if ($verify_id !== NULL) {
     mail(
-        $validator->data['email'],
+        $_GET['email'],
         'Camagru Account Verification',
         'Click this link to verify your account: http://' . $_SERVER['HTTP_HOST'] . '/verify.php?id=' . $verify_id,
         'From: webmaster@camagru.com'
