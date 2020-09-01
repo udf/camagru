@@ -341,8 +341,8 @@ window.onload = async () => {
             layers.push(new Layer(
                 element.src,
                 element,
-                element.width,
-                element.height,
+                element.naturalWidth,
+                element.naturalHeight,
                 layers.length === 0 ? 0.994 : 0.5
             ));
             selected_layer = layers[layers.length - 1];
