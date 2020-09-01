@@ -63,14 +63,14 @@ class Layer {
     doTransform(ctx) {
         const t = this.getTransform();
 
-        const center_x = (t.x + this.width / 2) * t.x_scale;
-        const center_y = (t.y + this.height / 2) * t.y_scale;
+        const center_x = t.x + this.width / 2 * t.x_scale;
+        const center_y = t.y + this.height / 2 * t.y_scale;
 
         ctx.translate(center_x, center_y);
         ctx.rotate(t.rotation * Math.PI / 180);
         ctx.translate(-center_x, -center_y);
         ctx.scale(t.x_scale, t.y_scale);
-        ctx.translate(t.x, t.y);
+        ctx.translate(t.x / t.x_scale, t.y / t.y_scale);
 
         return t;
     }
@@ -288,7 +288,7 @@ window.onload = async () => {
     canvas.addEventListener('mouseup', e => onMouseUp(e.clientX, e.clientY));
     canvas.addEventListener('mousemove', e => onMouseMove(e.clientX, e.clientY));
     canvas.addEventListener('mouseout', e => onMouseOut());
-    0
+
     canvas.addEventListener('touchstart', e => {
         e.preventDefault();
         onMouseDown(e.touches[0].clientX, e.touches[0].clientY)
