@@ -40,3 +40,16 @@ body > .container {
 .form-center button {
     margin-top: 15px;
 }
+
+.thumbnail {
+    width: 25%;
+    height: auto;
+    object-fit: contain;
+    padding: 5px;
+    border: 1px solid #444;
+    cursor: pointer;
+}
+
+.thumbnail:hover {
+    background-color: #444;
+}

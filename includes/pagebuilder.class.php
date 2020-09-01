@@ -29,7 +29,7 @@ class Pagebuilder
             </li>
             <?php if (isset($_SESSION['username'])): ?>
             <li class="nav-item">
-                <a class="nav-link" href="upload.php">Upload</a>
+                <a class="nav-link" href="ft_snapchat.php">Upload</a>
             </li>
             <?php endif; ?>
         </ul>
