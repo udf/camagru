@@ -14,10 +14,30 @@ async function try_webcam(video) {
     }
 }
 
+function make_threshold_alpha_img(img, ctx, canvas) {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.scale(0.994, 0.994);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    for (let i = 3, n = canvas.width * canvas.height * 4; i < n; i += 4) {
+        pixels[i] = pixels[i] < 50 ? 0 : 255
+    }
+    ctx.putImageData(imageData, 0, 0);
+    const e = document.createElement('img');
+    e.src = canvas.toDataURL('image/png');
+    return e;
+}
+
 class Layer {
-  constructor(name, obj, originalWidth, originalHeight, scale) {
-        this.name = name;
+  constructor(obj, originalWidth, originalHeight, scale, ctx, canvas) {
         this.obj = obj;
+        this.border_img = make_threshold_alpha_img(obj, ctx, canvas);
         const relativeScale = Math.min(
             canvas.width / originalWidth,
             canvas.height / originalHeight
@@ -105,10 +125,9 @@ window.onload = async () => {
 
         tmp_ctx.save();
         const t = layer.doTransform(tmp_ctx);
-        // tmp_ctx.scale();
         for(let i = 0; i < offsets.length; i += 2) {
             tmp_ctx.translate(offsets[i] * lineWidth / t.x_scale, offsets[i + 1] * lineWidth / t.y_scale);
-            tmp_ctx.drawImage(layer.obj, 0, 0, layer.width, layer.height);
+            tmp_ctx.drawImage(layer.border_img, 0, 0, layer.width, layer.height);
         }
 
         tmp_ctx.restore();
@@ -122,7 +141,7 @@ window.onload = async () => {
 
         tmp_ctx.globalCompositeOperation = "destination-out";
         tmp_ctx.drawImage(
-            layer.obj,
+            layer.border_img,
             0, 0,
             layer.width, layer.height
         );
@@ -316,11 +335,12 @@ window.onload = async () => {
             let image = new Image();
             image.onload = () => {
                 layers.push(new Layer(
-                    file.name,
                     image,
                     image.width,
                     image.height,
-                    layers.length === 0 ? 0.994 : 0.5
+                    layers.length === 0 ? 1 : 0.5,
+                    tmp_ctx,
+                    tmp_canvas
                 ));
                 selected_layer = layers[layers.length - 1];
                 update_layer_info();
@@ -339,11 +359,12 @@ window.onload = async () => {
     for (const element of document.getElementsByClassName('thumbnail')) {
         element.addEventListener('click', () => {
             layers.push(new Layer(
-                element.src,
                 element,
                 element.naturalWidth,
                 element.naturalHeight,
-                layers.length === 0 ? 0.994 : 0.5
+                layers.length === 0 ? 1 : 0.5,
+                tmp_ctx,
+                tmp_canvas
             ));
             selected_layer = layers[layers.length - 1];
             update_layer_info();
@@ -353,7 +374,14 @@ window.onload = async () => {
     // webcam
     let video = document.getElementById('video');
     video.addEventListener('loadedmetadata', () => {
-        layers.unshift(new Layer('Webcam', video, video.videoWidth, video.videoHeight, 0.994));
+        layers.unshift(new Layer(
+            video,
+            video.videoWidth,
+            video.videoHeight,
+            1,
+            tmp_ctx,
+            tmp_canvas
+        ));
         selected_layer = layers[0];
         update_layer_info();
         document.getElementById('webcam_pause').style = '';
