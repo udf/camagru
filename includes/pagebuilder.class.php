@@ -14,7 +14,6 @@ class Pagebuilder
     <!DOCTYPE html>
     <html>
     <head>
-        <link rel="shortcut icon" type="image/png" href="favicon.png">
         <title><?php echo $title ?> | Camagru</title>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/default.css">
