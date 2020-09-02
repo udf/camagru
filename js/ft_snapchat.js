@@ -19,7 +19,7 @@ function make_threshold_alpha_img(img, ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.save();
-    ctx.scale(0.994, 0.994);
+    ctx.scale(0.997, 0.997);
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     ctx.restore();
 
