@@ -36,6 +36,16 @@ class DB {
             pw_change_id VARCHAR(64) DEFAULT NULL,
             email_notifications BOOLEAN DEFAULT 1
         );');
+
+        $this->conn->query('CREATE TABLE images (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            filename VARCHAR(256) NOT NULL,
+            date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+            UNIQUE KEY `filename` (`user_id`, `filename`)
+        );');
+
         echo "Successfully (re)created database!";
     }
 
@@ -178,6 +188,23 @@ class DB {
         if ($result === false)
             throw new RuntimeException('Invalid token');
         return $result;
+    }
+
+    function add_image($user_id, $filename) {
+        $sql = $this->conn->prepare('
+            INSERT INTO images
+                (`user_id`, `filename`)
+            VALUES
+                (?, ?);
+        ');
+
+        try {
+            $sql->execute([$user_id, $filename]);
+        } catch (PDOException $e) {
+            if ($e->getCode() == '23000')
+                throw new RuntimeException('A user with those details already exists');
+            throw $e;
+        }
     }
 
 }

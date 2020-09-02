@@ -149,7 +149,7 @@ window.onload = async () => {
         tmp_ctx.restore();
     }
 
-    function loop() {
+    function loop(t, render) {
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -164,12 +164,14 @@ window.onload = async () => {
             ctx.restore();
         }
 
-        if (selected_layer) {
+        if (selected_layer && !render) {
             drawBorderToTmp(selected_layer);
             ctx.drawImage(tmp_canvas, 0, 0);
         }
 
-        requestAnimationFrame(loop);
+        if (!render) {
+            requestAnimationFrame(loop);
+        }
     }
     requestAnimationFrame(loop);
 
@@ -395,4 +397,27 @@ window.onload = async () => {
         video.paused ? video.play() : video.pause();
     });
     await try_webcam(video);
+
+    // posting
+    document.getElementById('upload').addEventListener('click', () => {
+        if (layers.length <= 0) {
+            return;
+        }
+
+        loop(0, true);
+
+        let form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/ft_snapchat.php");
+
+        let imageField = document.createElement("input");
+        imageField.setAttribute("type", "hidden");
+        imageField.setAttribute("name", "image");
+        imageField.setAttribute("value", canvas.toDataURL('image/png'));
+
+        form.appendChild(imageField);
+
+        document.body.appendChild(form);
+        form.submit();
+    });
 }

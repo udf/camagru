@@ -2,6 +2,43 @@
 require_once('includes/pagebuilder.class.php');
 require_once('includes/htmltag.class.php');
 require_auth();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $img_data = preg_replace('/^data:image\/\w+;base64,/', '', $_POST['image']);
+    $img_data = base64_decode($img_data);
+    if ($img_data === false)
+        die_with_code('Invalid or missing image data');
+
+    $WIDTH = 720;
+    $HEIGHT = 720;
+
+    $img = imagecreatefromstring($img_data);
+    if ($img === false)
+        die_with_code('Invalid image data');
+    if (imagesx($img) !== $WIDTH || imagesy($img) !== $HEIGHT)
+        die_with_code('Invalid image data');
+
+    $out_img = imagecreatetruecolor($WIDTH, $HEIGHT); 
+    imagefill($out_img, 0, 0, imagecolorallocatealpha($out_img, 0, 0, 0, 255)); 
+    imagecopy($out_img, $img, 0, 0, 0, 0, $WIDTH, $HEIGHT);
+
+    ob_start(); 
+    imagepng($out_img);
+    $out_img_data = ob_get_contents(); 
+    ob_end_clean(); 
+
+    $filename = hash('sha256', $out_img_data) . '.png';
+
+    try {
+        $DATABASE->add_image($_SESSION['id'], $filename);
+    } catch (RuntimeException $e) {
+        die_with_code('Image has been posted by this user before');
+    }
+
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/uploads/${filename}", $out_img_data);
+    header('Location: index.php');
+}
+
 $_PAGE_BUILDER = new Pagebuilder('Upload');
 ?>
 
@@ -55,7 +92,7 @@ $_PAGE_BUILDER = new Pagebuilder('Upload');
             <input type="file" class="form-control-file" id="file_input" accept="image/*">
         </div>
         <hr>
-        <a class="btn btn-primary" style="color: #fff;">Upload</a>
+        <a class="btn btn-primary" style="color: #fff;" id="upload">Upload</a>
     </div>
 </div>
 
