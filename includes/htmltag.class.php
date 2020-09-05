@@ -8,6 +8,12 @@ class _HTMLTag {
         $this->name = $name;
         $this->attrs = $attrs;
         $this->children = [];
+        $this->content = '';
+    }
+
+    function setContent($content) {
+        $this->content = $content;
+        return $this;
     }
 
     function append($obj) {
@@ -20,16 +26,29 @@ class _HTMLTag {
         return $this;
     }
 
+    function print() {
+        echo $this;
+    }
+
     function __toString() {
         $str = "<{$this->name}";
         foreach ($this->attrs as $attr => $value) {
             $str .= ' ';
-            if (is_int($attr))
+            if (is_int($attr)) {
                 $str .= $value;
-            else
-                $str .= sprintf('%s="%s"', $attr, htmlspecialchars($value));
+                continue;
+            }
+            if (is_bool($value)) {
+                if ($value === true)
+                    $str .= $attr;
+                continue;
+            }
+            $str .= sprintf('%s="%s"', $attr, htmlspecialchars($value));
         }
         $str .= '>';
+        if (!empty($this->content)) {
+            $str .= htmlspecialchars($this->content);
+        }
         foreach ($this->children as $child) {
             $str .= (string)$child;
         }

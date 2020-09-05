@@ -1,12 +1,17 @@
 <?php
-require_once('includes/pagebuilder.class.php');
+require_once('includes/pagebuilder.class.php');;
+require_once('includes/htmltag.class.php');
 
 require_auth();
 
 $_PAGE_BUILDER = new Pagebuilder('Settings');
 ?>
 <h1 class="mt-5">Your Settings</h1>
-<h4>You are logged in as <?php echo htmlspecialchars($_SESSION['username']); ?></h4>
+<?php
+    HTMLTag('h4')
+        ->setContent("You're logged in as {$_SESSION['username']}")
+        ->print();
+?>
 <hr />
 
 <form class="form-center" action="change_username.php">
@@ -35,10 +40,19 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 <hr />
 
 <form class="form-center" action="change_notify.php">
-    <h1 class="h3 mb-3 font-weight-normal">Email Nofications</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Email Notifications</h1>
     <label>Notifications Enabled:
-        <input class="checkbox pull-right" type="checkbox" name="notify_on"
-        <?php echo $_SESSION['email_notifications'] ? 'checked' : '' ?>>
+        <?php
+            HTMLTag(
+                'input',
+                [
+                    'class' => 'checkbox pull-right',
+                    'type' => 'checkbox',
+                    'name' => 'notify_on',
+                    'checked' => $_SESSION['email_notifications'] ? true : false
+                ]
+            )->print();
+        ?>
     </label>
     <button class="btn btn-lg btn-secondary btn-block" type="submit">Save</button>
 </form>
