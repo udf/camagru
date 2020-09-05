@@ -6,7 +6,8 @@ body {
     margin-bottom: 50px;
 }
 body > .container {
-    padding: 40px 5px 0;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 .footer {
     position: absolute;
