@@ -10,7 +10,7 @@ async function try_webcam(video) {
             <div class="alert alert-warning"><strong>Aww, we couldn't access your webcam.</strong><br>
             No worries, click the add custom sticker/image button to upload your own image!</div>
         `;
-        window.scroll(0, 0);
+        err_div.scrollIntoView();
     }
 }
 
@@ -413,12 +413,13 @@ window.onload = async () => {
 
         req.open('POST', 'ft_snapchat.php', true);
         req.onload = (e) => {
-            document.getElementById('server_messages').innerHTML = req.response;
+            let err_div = document.getElementById('server_messages');
+            err_div.innerHTML = req.response;
             if (req.status == 200) {
                 window.location.replace('/');
-            } else {
-                window.scroll(0, 0);
+                return;
             }
+            err_div.scrollIntoView();
         };
         req.send(data);
     });

@@ -12,9 +12,9 @@ function form_submit(event) {
         let redir_location = form.getAttribute('redirect');
         if (redir_location != null && req.status == 200) {
             window.location.replace(redir_location);
-        } else {
-            window.scroll(0, 0);
+            return;
         }
+        output.scrollIntoView();
     };
     req.send(data);
 }
