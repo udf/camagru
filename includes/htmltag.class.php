@@ -4,15 +4,20 @@ class _HTMLTag {
     public $attrs;
     public $children;
 
-    function __construct(string $name, array $attrs=[]) {
+    function __construct(string $name) {
         $this->name = $name;
-        $this->attrs = $attrs;
+        $this->attrs = [];
         $this->children = [];
         $this->content = '';
     }
 
     function setContent($content) {
         $this->content = $content;
+        return $this;
+    }
+
+    function addAttr($key, $value) {
+        $this->attrs[$key] = $value;
         return $this;
     }
 

@@ -76,13 +76,10 @@ $_PAGE_BUILDER = new Pagebuilder('Upload');
             <div class="card-body" style="display: flex; flex-wrap: wrap; overflow-y: scroll; background-color: #333; padding: 10px;">
                 <?php
                 foreach (glob('stickers/*.*') as $file) {
-                    HTMLTag(
-                        'img',
-                        [
-                            'src' => $file,
-                            'class' => 'thumbnail'
-                        ]
-                    )->print();
+                    HTMLTag('img')
+                        ->addAttr('src', $file)
+                        ->addAttr('class', 'thumbnail')
+                        ->print();
                 }
                 ?>
             </div>

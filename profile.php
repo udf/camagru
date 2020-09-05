@@ -43,15 +43,12 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
     <h1 class="h3 mb-3 font-weight-normal">Email Notifications</h1>
     <label>Notifications Enabled:
         <?php
-            HTMLTag(
-                'input',
-                [
-                    'class' => 'checkbox pull-right',
-                    'type' => 'checkbox',
-                    'name' => 'notify_on',
-                    'checked' => $_SESSION['email_notifications'] ? true : false
-                ]
-            )->print();
+            HTMLTag('input')
+                ->addAttr('class', 'checkbox pull-right')
+                ->addAttr('type', 'checkbox')
+                ->addAttr('name', 'notify_on')
+                ->addAttr('checked', $_SESSION['email_notifications'] ? true : false)
+                ->print();
         ?>
     </label>
     <button class="btn btn-lg btn-secondary btn-block" type="submit">Save</button>
