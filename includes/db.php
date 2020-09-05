@@ -41,10 +41,50 @@ class DB {
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT,
             filename VARCHAR(256) NOT NULL,
-            date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
-            UNIQUE KEY `filename` (`user_id`, `filename`)
+            date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            like_count INT NOT NULL DEFAULT 0,
+            comment_count INT NOT NULL DEFAULT 0,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            UNIQUE INDEX (user_id, filename)
         );');
+
+        $this->conn->query('CREATE TABLE comments (
+            image_id INT NOT NULL,
+            user_id INT NOT NULL,
+            text TEXT NOT NULL,
+            date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (image_id) REFERENCES images(id),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );');
+
+        $this->conn->query('CREATE TABLE likes (
+            image_id INT NOT NULL,
+            user_id INT NOT NULL,
+            FOREIGN KEY (image_id) REFERENCES images(id),
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            UNIQUE INDEX (image_id, user_id)
+        );');
+
+        $this->conn->query('CREATE TRIGGER COMMENT_INCREMENT
+            AFTER INSERT ON comments
+            FOR EACH ROW
+                UPDATE images SET comment_count = comment_count + 1
+                WHERE id = NEW.image_id;
+        ');
+
+        $this->conn->query('CREATE TRIGGER LIKE_INCREMENT
+            AFTER INSERT ON likes
+            FOR EACH ROW
+                UPDATE images SET like_count = like_count + 1
+                WHERE id = NEW.image_id;
+        ');
+
+        $this->conn->query('CREATE TRIGGER LIKE_DECREMENT
+            AFTER DELETE ON likes
+            FOR EACH ROW
+                UPDATE images SET like_count = like_count - 1
+                WHERE id = OLD.image_id;
+        ');
 
         echo "Successfully (re)created database!";
     }
@@ -165,7 +205,6 @@ class DB {
         try {
             $sql->execute([$pw_change_id, $id]);
         } catch (PDOException $e) {
-            var_dump($e);
             throw new RuntimeException('Sorry, an unexpected error occured.');
         }
         return $pw_change_id;
@@ -202,9 +241,58 @@ class DB {
             $sql->execute([$user_id, $filename]);
         } catch (PDOException $e) {
             if ($e->getCode() == '23000')
-                throw new RuntimeException('A user with those details already exists');
-            throw $e;
+                throw new RuntimeException('You have posted this image before');
+            throw new RuntimeException('Sorry, an unexpected error occured.');
         }
+    }
+
+    function get_images($start, $user_id) {
+        global $PAGE_SIZE;
+
+        $sql = $this->conn->prepare(
+            'SELECT
+                a.id,
+                a.filename,
+                a.like_count,
+                a.comment_count,
+                a.date,
+                b.username as username,
+                (SELECT 1 FROM likes WHERE image_id = a.id AND user_id = :user_id) as is_liked
+            FROM images as a
+            JOIN users as b ON a.user_id = b.id
+            ORDER BY a.date DESC
+            LIMIT :start, :page_size;'
+        );
+
+        try {
+            $sql->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $sql->bindValue(':start', $start, PDO::PARAM_INT);
+            $sql->bindValue(':page_size', $PAGE_SIZE, PDO::PARAM_INT);
+            $sql->execute();
+        } catch (PDOException $e) {
+            var_dump($e);
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function count_images() {
+        $sql = $this->conn->prepare('
+            SELECT
+                COUNT(*) as count
+            FROM images;
+        ');
+
+        try {
+            $sql->execute();
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($result === false)
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        return $result['count'];
     }
 
 }

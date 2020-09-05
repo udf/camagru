@@ -53,3 +53,36 @@ body > .container {
 .thumbnail:hover {
     background-color: #444;
 }
+
+img {
+    width: 100%;
+}
+
+.like-icon, .unlike-icon {
+    cursor: pointer;
+}
+
+.like-icon::before {
+    font-size: x-large;
+    content: '❤️';
+    color: red;
+    margin-right: 10px;
+}
+
+.unlike-icon::before {
+    font-size: x-large;
+    content: '💔';
+    margin-right: 10px;
+}
+
+.comment-icon::before {
+    font-size: x-large;
+    content: '💬';
+    margin-right: 10px;
+}
+
+.card-footer-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

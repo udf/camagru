@@ -21,11 +21,8 @@ class Pagebuilder
     </head>
     <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Camagru</a>
+        <a class="navbar-brand" href="/">Camagru</a>
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="index.php">Gallery</a>
-            </li>
             <?php if (isset($_SESSION['username'])): ?>
             <li class="nav-item">
                 <a class="nav-link" href="ft_snapchat.php">Upload</a>

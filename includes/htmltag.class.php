@@ -4,11 +4,11 @@ class _HTMLTag {
     public $attrs;
     public $children;
 
-    function __construct(string $name) {
+    function __construct(string $name, array $attrs=[], string $content='') {
         $this->name = $name;
-        $this->attrs = [];
+        $this->attrs = $attrs;
         $this->children = [];
-        $this->content = '';
+        $this->content = $content;
     }
 
     function setContent($content) {
@@ -16,8 +16,13 @@ class _HTMLTag {
         return $this;
     }
 
-    function addAttr($key, $value) {
+    function setAttr($key, $value) {
         $this->attrs[$key] = $value;
+        return $this;
+    }
+
+    function addChildren($children) {
+        $this->children = array_merge($this->children, $children);
         return $this;
     }
 
@@ -51,7 +56,7 @@ class _HTMLTag {
             $str .= sprintf('%s="%s"', $attr, htmlspecialchars($value));
         }
         $str .= '>';
-        if (!empty($this->content)) {
+        if ($this->content !== '') {
             $str .= htmlspecialchars($this->content);
         }
         foreach ($this->children as $child) {

@@ -77,8 +77,8 @@ $_PAGE_BUILDER = new Pagebuilder('Upload');
                 <?php
                 foreach (glob('stickers/*.*') as $file) {
                     HTMLTag('img')
-                        ->addAttr('src', $file)
-                        ->addAttr('class', 'thumbnail')
+                        ->setAttr('src', $file)
+                        ->setAttr('class', 'thumbnail')
                         ->print();
                 }
                 ?>
