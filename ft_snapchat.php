@@ -7,16 +7,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $img_data = preg_replace('/^data:image\/\w+;base64,/', '', $_POST['image']);
     $img_data = base64_decode($img_data);
     if ($img_data === false)
-        die_with_code('Invalid or missing image data');
+        die_with_alert('danger', 'Error', 'Invalid or missing image data');
 
     $WIDTH = 720;
     $HEIGHT = 720;
 
     $img = imagecreatefromstring($img_data);
     if ($img === false)
-        die_with_code('Invalid image data');
+        die_with_alert('danger', 'Error', 'Invalid image data');
     if (imagesx($img) !== $WIDTH || imagesy($img) !== $HEIGHT)
-        die_with_code('Invalid image data');
+        die_with_alert('danger', 'Error', 'Invalid image data');
 
     $out_img = imagecreatetruecolor($WIDTH, $HEIGHT); 
     imagefill($out_img, 0, 0, imagecolorallocatealpha($out_img, 0, 0, 0, 255)); 
@@ -32,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $DATABASE->add_image($_SESSION['id'], $filename);
     } catch (RuntimeException $e) {
-        die_with_code('Image has been posted by this user before');
+        die_with_alert('danger', 'Error', $e->getMessage());
     }
 
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/uploads/${filename}", $out_img_data);
-    header('Location: index.php');
+    die_with_alert('success', 'Success', 'Your image has been posted', 200);
 }
 
 $_PAGE_BUILDER = new Pagebuilder('Upload');

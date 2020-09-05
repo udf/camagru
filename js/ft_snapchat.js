@@ -406,18 +406,20 @@ window.onload = async () => {
 
         loop(0, true);
 
-        let form = document.createElement("form");
-        form.setAttribute("method", "post");
-        form.setAttribute("action", "/ft_snapchat.php");
+        let data = new FormData();
+        data.append('image', canvas.toDataURL('image/png'));
 
-        let imageField = document.createElement("input");
-        imageField.setAttribute("type", "hidden");
-        imageField.setAttribute("name", "image");
-        imageField.setAttribute("value", canvas.toDataURL('image/png'));
+        let req = new XMLHttpRequest();
 
-        form.appendChild(imageField);
-
-        document.body.appendChild(form);
-        form.submit();
+        req.open('POST', 'ft_snapchat.php', true);
+        req.onload = (e) => {
+            document.getElementById('server_messages').innerHTML = req.response;
+            if (req.status == 200) {
+                window.location.replace('/');
+            } else {
+                window.scroll(0, 0);
+            }
+        };
+        req.send(data);
     });
 }
