@@ -27,5 +27,5 @@ if ($validator->verify()) {
     } catch (RuntimeException $e) {
         die_with_alert('danger', 'Error', $e->getMessage());
     }
-    die_with_alert('success', 'Your email has been updated', 'Please refresh the page to load the latest details', 200);
+    die_with_alert('success', 'Your email has been updated', 'Please refresh the page to load the latest details', 201);
 }

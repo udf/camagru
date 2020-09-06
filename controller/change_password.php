@@ -13,6 +13,8 @@ $validator = new PostValidator(
 
 if ($validator->verify()) {
     try {
+        if (password_verify($validator->data['password'], $_SESSION['pw_hash']))
+            throw new RuntimeException('Your new password cannot be the same as your old password');
         $_SESSION['pw_hash'] = $DATABASE->update_password($_SESSION['id'], $validator->data['password']);
     } catch (RuntimeException $e) {
         die_with_alert('danger', 'Error', $e->getMessage());

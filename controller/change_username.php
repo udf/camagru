@@ -6,12 +6,14 @@ require_once('../includes/postvalidator.class.php');
 $validator = new PostValidator(
     [
         'current_password' => $VALIDATOR_PASSWORD_CURRENT,
-        'username' => $VALIDATOR_USERNAME,
+        'username' => $VALIDATOR_USERNAME
     ]
 );
 
 if ($validator->verify()) {
     try {
+        if ($validator->data['username'] === $_SESSION['username'])
+            throw new RuntimeException('Your new username cannot be the same ask your old username');
         $DATABASE->update_user(
             $_SESSION['id'],
             $validator->data['username'],
