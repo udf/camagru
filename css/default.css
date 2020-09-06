@@ -70,8 +70,16 @@ img {
 .like-icon::before {
     font-size: x-large;
     content: '❤️';
-    color: red;
     margin-right: 10px;
+    color: #333;
+}
+
+.like-icon:hover {
+    color: red;
+}
+
+.like-icon:hover::before {
+    color: red;
 }
 
 .unlike-icon::before {
