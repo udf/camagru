@@ -57,6 +57,13 @@ class DB {
             FOREIGN KEY (user_id) REFERENCES users(id)
         );');
 
+        $this->conn->query('CREATE TRIGGER COMMENT_INCREMENT
+            AFTER INSERT ON comments
+            FOR EACH ROW
+                UPDATE images SET comment_count = comment_count + 1
+                WHERE id = NEW.image_id;
+        ');
+
         $this->conn->query('CREATE TABLE likes (
             image_id INT NOT NULL,
             user_id INT NOT NULL,
@@ -64,13 +71,6 @@ class DB {
             FOREIGN KEY (user_id) REFERENCES users(id),
             UNIQUE INDEX (image_id, user_id)
         );');
-
-        $this->conn->query('CREATE TRIGGER COMMENT_INCREMENT
-            AFTER INSERT ON comments
-            FOR EACH ROW
-                UPDATE images SET comment_count = comment_count + 1
-                WHERE id = NEW.image_id;
-        ');
 
         $this->conn->query('CREATE TRIGGER LIKE_INCREMENT
             AFTER INSERT ON likes
@@ -84,6 +84,23 @@ class DB {
             FOR EACH ROW
                 UPDATE images SET like_count = like_count - 1
                 WHERE id = OLD.image_id;
+        ');
+
+        $this->conn->query('CREATE FUNCTION ToggleLike
+            (
+                _image_id INT,
+                _user_id INT
+            )
+            RETURNS INT
+            BEGIN
+                DELETE FROM likes WHERE user_id = _user_id AND image_id = _image_id;
+
+                IF (ROW_COUNT() > 0) THEN
+                    RETURN 0;
+                END IF;
+                INSERT INTO likes (image_id, user_id) VALUES (_image_id, _user_id);
+                RETURN 1;
+            END
         ');
 
         echo "Successfully (re)created database!";
