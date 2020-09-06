@@ -415,5 +415,25 @@ class DB {
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
 
+    function get_user_images($user_id) {
+        $sql = $this->conn->prepare('
+            SELECT
+                id, filename
+            FROM
+                images
+            WHERE
+                user_id = ?
+            ORDER BY
+                date DESC;
+        ');
+
+        try {
+            $sql->execute([$user_id]);
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 ?>

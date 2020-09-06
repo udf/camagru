@@ -39,6 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die_with_alert('success', 'Success', 'Your image has been posted', 200);
 }
 
+try {
+    $posts = $DATABASE->get_user_images($_SESSION['id']);
+} catch (RuntimeException $e) {
+    die_with_alert('danger', 'Error', $e->getMessage());
+}
+
 $_PAGE_BUILDER = new Pagebuilder('Upload');
 ?>
 
@@ -72,14 +78,18 @@ $_PAGE_BUILDER = new Pagebuilder('Upload');
     <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
 
     <div class="card-body">
+        <a class="btn btn-primary" style="color: #fff;" id="upload">Upload</a>
+        <hr>
+
         <div class="card mx-auto" style="width: 100%; height: 200px;">
             <div class="card-body" style="display: flex; flex-wrap: wrap; overflow-y: scroll; background-color: #333; padding: 10px;">
                 <?php
                 foreach (glob('stickers/*.*') as $file) {
                     HTMLTag('img')
-                        ->setAttr('src', $file)
-                        ->setAttr('class', 'thumbnail')
-                        ->print();
+                    ->setAttr('src', $file)
+                    ->setAttr('class', 'thumbnail sticker')
+                    ->setAttr('style', 'padding: 5px; width: 25%;')
+                    ->print();
                 }
                 ?>
             </div>
@@ -89,7 +99,25 @@ $_PAGE_BUILDER = new Pagebuilder('Upload');
             <input type="file" class="form-control-file" id="file_input" accept="image/*">
         </div>
         <hr>
-        <a class="btn btn-primary" style="color: #fff;" id="upload">Upload</a>
+
+        <div class="card mx-auto" style="width: 100%; max-height: 200px;">
+            <div class="card-body" style="display: flex; flex-wrap: wrap; overflow-y: scroll; padding: 10px;">
+                <?php
+                foreach ($posts as $post) {
+                    HTMLTag('a')
+                    ->setAttr('href', "comments.php?id={$post['id']}")
+                    ->setAttr('class', 'thumbnail')
+                    ->setAttr('style', 'width: 25%;')
+                    ->append(
+                        HTMLTag('img')
+                        ->setAttr('src', "uploads/{$post['filename']}")
+                        ->setAttr('class', 'thumbnail')
+                    )
+                    ->print();
+                }
+                ?>
+            </div>
+        </div>
     </div>
 </div>
 

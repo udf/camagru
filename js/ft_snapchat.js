@@ -358,7 +358,7 @@ window.onload = async () => {
         }
     });
 
-    for (const element of document.getElementsByClassName('thumbnail')) {
+    for (const element of document.getElementsByClassName('sticker')) {
         element.addEventListener('click', () => {
             layers.push(new Layer(
                 element,

@@ -46,15 +46,16 @@ body > .container {
 }
 
 .thumbnail {
-    width: 25%;
     height: auto;
     object-fit: contain;
-    padding: 5px;
     border: 1px solid #444;
+}
+
+.sticker {
     cursor: pointer;
 }
 
-.thumbnail:hover {
+.sticker:hover {
     background-color: #444;
 }
 
