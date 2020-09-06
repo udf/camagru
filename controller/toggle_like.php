@@ -1,6 +1,5 @@
 <?php
 require_once('../includes/init.php');
-
 require_auth();
 
 if (array_key_exists('id', $_POST) === false)

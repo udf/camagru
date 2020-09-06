@@ -1,8 +1,7 @@
 <?php
-require_once('includes/pagebuilder.class.php');
-require_once('includes/postvalidator.class.php');
-
+require_once('../includes/init.php');
 require_auth();
+require_once('../includes/postvalidator.class.php');
 
 $notify_on = (int)(isset($_POST['notify_on']) && $_POST['notify_on'] == 'on');
 

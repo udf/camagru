@@ -8,12 +8,12 @@ function form_submit(event) {
 
     req.open('POST', form.getAttribute('action') || '', true);
     req.onload = function(event) {
-        output.innerHTML = req.response;
         let redir_location = form.getAttribute('redirect');
         if (redir_location != null && req.status == 200) {
             window.location.replace(redir_location);
             return;
         }
+        output.innerHTML = req.response;
         output.scrollIntoView();
     };
     req.send(data);

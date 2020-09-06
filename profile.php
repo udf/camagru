@@ -14,7 +14,7 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 ?>
 <hr />
 
-<form class="form-center" action="change_username.php">
+<form class="form-center" action="controller/change_username.php" redirect="profile.php">
     <h1 class="h3 mb-3 font-weight-normal">Change Username</h1>
     <input class="form-control" type="password" name="current_password" placeholder="Current Password" required="">
     <input class="form-control" type="text" name="username" placeholder="New Username" required="">
@@ -22,7 +22,7 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 </form>
 <hr />
 
-<form class="form-center" action="change_password.php">
+<form class="form-center" action="controller/change_password.php" redirect="profile.php">
     <h1 class="h3 mb-3 font-weight-normal">Change Password</h1>
     <input class="form-control" type="password" name="current_password" placeholder="Current Password" required="">
     <input class="form-control" type="password" name="password" placeholder="New Password" required="">
@@ -31,7 +31,7 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 </form>
 <hr />
 
-<form class="form-center" action="change_email.php" redirect="login.php">
+<form class="form-center" action="controller/change_email.php" redirect="login.php">
     <h1 class="h3 mb-3 font-weight-normal">Change Email</h1>
     <input class="form-control" type="text" name="email" placeholder="Current Email Address" required="">
     <input class="form-control" type="text" name="new_email" placeholder="New Email Address" required="">
@@ -39,7 +39,7 @@ $_PAGE_BUILDER = new Pagebuilder('Settings');
 </form>
 <hr />
 
-<form class="form-center" action="change_notify.php">
+<form class="form-center" action="controller/change_notify.php">
     <h1 class="h3 mb-3 font-weight-normal">Email Notifications</h1>
     <label>Notifications Enabled:
         <?php
