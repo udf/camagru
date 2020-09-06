@@ -44,10 +44,10 @@ echo $pagination;
 
 $posts = $DATABASE->get_images(($current_page - 1) * $PAGE_SIZE, $_SESSION['id'] ?? -1);
 foreach ($posts as $post) {
-    $like_icon_class = ($post['is_liked'] === NULL ? 'like-icon' : 'unlike-icon');
+    $like_icon_class = ($post['is_liked'] === '1' ? 'unlike-icon' : 'like-icon');
 ?>
 
-<div class="card mb-3 mt-3 mx-auto" <?php echo "id=${post['id']}" ?>>
+<div class="card mb-3 mt-3 mx-auto" style="max-width: 720px;" <?php echo "id=${post['id']}" ?>>
     <div class="card-header">
         <?php HTMLTag('div', ['class' => 'row justify-content-between'])
             ->append(HTMLTag('span', [], "👤 {$post['username']}"))

@@ -257,7 +257,7 @@ class DB {
                 a.comment_count,
                 a.date,
                 b.username as username,
-                (SELECT 1 FROM likes WHERE image_id = a.id AND user_id = :user_id) as is_liked
+                (SELECT EXISTS (SELECT 1 FROM likes WHERE image_id = a.id AND user_id = :user_id)) as is_liked
             FROM images as a
             JOIN users as b ON a.user_id = b.id
             ORDER BY a.date DESC
