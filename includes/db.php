@@ -109,7 +109,7 @@ class DB {
     function add_user($username, $email, $password) {
         $sql = $this->conn->prepare('
             INSERT INTO users
-                (`username`, `email`, `pw_hash`, `verify_id`)
+                (username, email, pw_hash, verify_id)
             VALUES
                 (?, ?, ?, ?);
         ');
@@ -129,7 +129,7 @@ class DB {
         $sql = $this->conn->prepare('
             SELECT
                 *
-            FROM `users` WHERE
+            FROM users WHERE
                 (email = ? OR username = ?);
         ');
 
@@ -231,7 +231,7 @@ class DB {
         $sql = $this->conn->prepare('
             SELECT
                 *
-            FROM `users` WHERE
+            FROM users WHERE
                 pw_change_id = ?;
         ');
 
@@ -249,7 +249,7 @@ class DB {
     function add_image($user_id, $filename) {
         $sql = $this->conn->prepare('
             INSERT INTO images
-                (`user_id`, `filename`)
+                (user_id, filename)
             VALUES
                 (?, ?);
         ');
@@ -391,6 +391,28 @@ class DB {
             throw new RuntimeException('Sorry, an unexpected error occured.');
         }
         return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function get_email_for_image($image_id, $user_id) {
+        $sql = $this->conn->prepare('
+            SELECT
+                b.email
+            FROM
+                images as a
+            JOIN
+                users as b
+            ON
+                a.user_id = b.id
+            WHERE
+                a.id = ? AND a.user_id <> ? AND email_notifications = 1
+        ');
+
+        try {
+            $sql->execute([$image_id, $user_id]);
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        return $sql->fetch(PDO::FETCH_ASSOC);
     }
 
 }
