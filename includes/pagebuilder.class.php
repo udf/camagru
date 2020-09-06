@@ -1,9 +1,5 @@
 <?php
-require_once(__DIR__ . '/util.php');
-require_once(__DIR__ . '/db.php');
-session_start();
-
-$DATABASE = new DB();
+require_once(__DIR__ . '/init.php');
 
 // Outputs header when constructed
 // Deconstruction outputs the footer

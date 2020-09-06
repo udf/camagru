@@ -312,5 +312,23 @@ class DB {
         return $result['count'];
     }
 
+    function toggle_like($image_id, $user_id) {
+        $sql = $this->conn->prepare('
+            SELECT ToggleLike(:image_id, :user_id) as isLiked;
+        ');
+
+        try {
+            $sql->bindValue(':image_id', $image_id, PDO::PARAM_INT);
+            $sql->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $sql->execute();
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($result === false)
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        return $result;
+    }
+
 }
 ?>
