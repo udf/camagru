@@ -287,7 +287,33 @@ class DB {
             $sql->bindValue(':page_size', $PAGE_SIZE, PDO::PARAM_INT);
             $sql->execute();
         } catch (PDOException $e) {
-            var_dump($e);
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function get_image($image_id, $user_id) {
+        $sql = $this->conn->prepare(
+            'SELECT
+                a.id,
+                a.filename,
+                a.like_count,
+                a.comment_count,
+                a.date,
+                b.username as username,
+                (SELECT EXISTS (SELECT 1 FROM likes WHERE image_id = a.id AND user_id = :user_id)) as is_liked
+            FROM images as a
+            JOIN users as b ON a.user_id = b.id
+            WHERE a.id = :image_id
+            ;'
+        );
+
+        try {
+            $sql->bindValue(':image_id', $image_id, PDO::PARAM_INT);
+            $sql->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $sql->execute();
+        } catch (PDOException $e) {
             throw new RuntimeException('Sorry, an unexpected error occured.');
         }
 
@@ -328,6 +354,43 @@ class DB {
         if ($result === false)
             throw new RuntimeException('Sorry, an unexpected error occured.');
         return $result;
+    }
+
+    function add_comment($image_id, $user_id, $text) {
+        $sql = $this->conn->prepare('
+            INSERT INTO comments
+                (image_id, user_id, text)
+            VALUES
+                (?, ?, ?);
+        ');
+
+        try {
+            $sql->execute([$image_id, $user_id, $text]);
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+    }
+
+    function get_comments($image_id) {
+        $sql = $this->conn->prepare('
+            SELECT
+                b.username as username, a.text, a.date
+            FROM
+                comments as a
+            JOIN
+                users as b ON a.user_id = b.id
+            WHERE
+                image_id = ?
+            ORDER BY
+                a.date DESC;
+        ');
+
+        try {
+            $sql->execute([$image_id]);
+        } catch (PDOException $e) {
+            throw new RuntimeException('Sorry, an unexpected error occured.');
+        }
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
 }

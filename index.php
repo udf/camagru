@@ -1,6 +1,8 @@
 <?php
 require_once('includes/pagebuilder.class.php');
 require_once('includes/htmltag.class.php');
+require_once('view/post.php');
+
 $_PAGE_BUILDER = new Pagebuilder('Gallery');
 
 function makeNavItem($text, $page_i) {
@@ -42,44 +44,21 @@ $pagination = (string)HTMLTag('nav')
 
 echo $pagination;
 
-$posts = $DATABASE->get_images(($current_page - 1) * $PAGE_SIZE, $_SESSION['id'] ?? -1);
+try {
+    $posts = $DATABASE->get_images(($current_page - 1) * $PAGE_SIZE, $_SESSION['id'] ?? -1);
+} catch (RuntimeException $e) {
+    die_with_alert('danger', 'Error', $e->getMessage());
+}
 foreach ($posts as $post) {
-    $like_icon_class = ($post['is_liked'] === '1' ? 'unlike-icon' : 'like-icon');
-?>
-
-<div class="card mb-3 mt-3 mx-auto" style="max-width: 720px;" <?php echo "id=${post['id']}" ?>>
-    <div class="card-header">
-        <?php HTMLTag('div', ['class' => 'row justify-content-between'])
-            ->append(HTMLTag('span', [], "👤 {$post['username']}"))
-            ->append(HTMLTag('span', [], "📅 {$post['date']}"))
-            ->print();
-        ?>
-    </div>
-    <div class="card-body">
-        <?php HTMLTag('a', ['href' => "comments.php?id={$post['id']}"])
-            ->append(HTMLTag('img', ['src' => "uploads/{$post['filename']}"]))
-            ->print();
-        ?>
-    </div>
-    <div class="card-footer">
-        <?php HTMLTag('div', ['class' => 'row'])
-            ->append(
-                HTMLTag('div')
-                ->setAttr('class', "col card-footer-button {$like_icon_class}")
-                ->setAttr('onclick', "toggle_like(this);")
-                ->setContent($post['like_count'])
-            )
-            ->append(
-                HTMLTag('div')
-                ->setAttr('class', "col card-footer-button comment-icon")
-                ->setContent($post['comment_count'])
-            )
-            ->print();
-        ?>
-    </div>
-</div>
-
-<?php
+    make_post_item(
+        $post['id'],
+        $post['username'],
+        $post['date'],
+        $post['filename'],
+        $post['is_liked'] === '1',
+        $post['like_count'],
+        $post['comment_count']
+    );
 }
 
 echo $pagination;

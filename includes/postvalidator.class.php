@@ -57,3 +57,8 @@ $VALIDATOR_PASSWORD_CURRENT = make_callback_validator(
     },
     'The password you entered was incorrect'
 );
+$VALIDATOR_COMMENT = [
+    'filter' => FILTER_VALIDATE_REGEXP,
+    'options' => ['regexp' => '/^\s*\S+/'],
+    'error' => 'Comments must not be empty text'
+];
